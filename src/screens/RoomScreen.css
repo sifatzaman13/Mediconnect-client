@@ -1,24 +1,24 @@
 /* Styles for the RoomPage component */
 div {
-    background-color: #808080; /* Dark red background color */
-    color: #880000; /* Dark red text color */
+    background-color: #808080; 
+    color: #b30000; 
     text-align: center;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Light box shadow */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); 
   }
   
   h1 {
-    color: #b30000; /* Darker red text color for headings */
+    color: #b30000; 
   }
   
   h4 {
-    color: #660000; /* Dark red text color for status message */
+    color: #b30000; 
   }
   
   button {
-    background: #b30000; /* Dark red background color for buttons */
-    color: #fff; /* White text color for buttons */
+    background: #b30000; 
+    color: #fff; 
     padding: 10px 20px;
     border: none;
     border-radius: 4px;
@@ -29,16 +29,16 @@ div {
   }
   
   button:hover {
-    background-color: #990000; /* Darker red on hover */
+    background-color: #990000; 
   }
   
-  /* Style for the video titles */
+
   h1 {
-    color: #b30000; /* Darker red text color for video titles */
+    color: #b30000; 
   }
   
-  /* Style for the 'Connected' or 'No one in room' message */
+  
   h4 {
-    color: #660000; /* Dark red text color for status message */
+    color: #660000; 
   }
   

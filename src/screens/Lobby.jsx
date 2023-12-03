@@ -35,7 +35,7 @@ const LobbyScreen = () => {
 
   return (
     <div className="lobby-container">
-      <h1 className="mediconnect-title">Mediconnect</h1>
+      <h1 className="mediconnect-title">MediConnect</h1>
       <form onSubmit={handleSubmitForm}>
         <label className="label-text" htmlFor="email">
           Email id
@@ -60,7 +60,7 @@ const LobbyScreen = () => {
         />
         <br />
         <button className="join-button" type="submit">
-          Join Now
+          Connect
         </button>
       </form>
     </div>
