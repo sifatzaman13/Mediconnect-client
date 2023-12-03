@@ -2,11 +2,13 @@ import React, { useEffect, useCallback, useState } from "react";
 import ReactPlayer from "react-player";
 import peer from "../service/peer";
 import { useSocket } from "../context/SocketProvider";
+import "./RoomScreen.css";
 
 const RoomPage = () => {
   const socket = useSocket();
   const [remoteSocketId, setRemoteSocketId] = useState(null);
   const [myStream, setMyStream] = useState();
+  const [accepted, setAccepted] = useState(false);
   const [remoteStream, setRemoteStream] = useState();
 
   const handleUserJoined = useCallback(({ email, id }) => {
@@ -32,6 +34,7 @@ const RoomPage = () => {
         video: true,
       });
       setMyStream(stream);
+      setAccepted(true);
       console.log(`Incoming Call`, from, offer);
       const ans = await peer.getAnswer(offer);
       socket.emit("call:accepted", { to: from, ans });
@@ -40,9 +43,11 @@ const RoomPage = () => {
   );
 
   const sendStreams = useCallback(() => {
+    setAccepted(true);
     for (const track of myStream.getTracks()) {
       peer.peer.addTrack(track, myStream);
     }
+
   }, [myStream]);
 
   const handleCallAccepted = useCallback(
@@ -111,31 +116,29 @@ const RoomPage = () => {
 
   return (
     <div>
-      <h1>Page for the video call room</h1>
-      <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4>
-      {myStream && <button onClick={sendStreams}>Send Stream</button>}
+      <h1>Video Call Room</h1>
+      <h4>{remoteSocketId ? "You're Connected with MediConnect" : "No user is live now"}</h4>
+      {myStream && <button onClick={sendStreams}>Send Video</button>}
       {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
       {myStream && (
         <>
-          <h1>My Stream</h1>
+          <h1>Me</h1>
           <ReactPlayer
             playing
             muted
-            height="100px"
-            width="200px"
+            width="300px"
             url={myStream}
           />
         </>
       )}
-      {remoteStream && (
+      {accepted && (
         <>
-          <h1>Remote Stream</h1>
+          <h1>Other User</h1>
           <ReactPlayer
             playing
             muted
-            height="100px"
-            width="200px"
-            url={remoteStream}
+            width="300px"
+            url={myStream}
           />
         </>
       )}

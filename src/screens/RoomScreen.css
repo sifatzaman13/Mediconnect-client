@@ -1,62 +1,44 @@
-/* RoomPage.css */
-
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f8f8;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .room-container {
-    max-width: 800px;
-    margin: 20px;
+/* Styles for the RoomPage component */
+div {
+    background-color: #808080; /* Dark red background color */
+    color: #880000; /* Dark red text color */
+    text-align: center;
     padding: 20px;
     border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); /* Light box shadow */
   }
   
-  h1, h4 {
-    text-align: center;
-    color: #007bff;
+  h1 {
+    color: #b30000; /* Darker red text color for headings */
+  }
+  
+  h4 {
+    color: #660000; /* Dark red text color for status message */
   }
   
   button {
-    padding: 12px;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: #fff;
+    background: #b30000; /* Dark red background color for buttons */
+    color: #fff; /* White text color for buttons */
+    padding: 10px 20px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s;
+    font-size: 1rem;
+    margin: 10px;
+    transition: background-color 0.3s ease-in-out;
   }
   
   button:hover {
-    background-color: #0056b3;
+    background-color: #990000; /* Darker red on hover */
   }
   
-  .player-container {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 20px;
+  /* Style for the video titles */
+  h1 {
+    color: #b30000; /* Darker red text color for video titles */
   }
   
-  .player {
-    flex: 1;
-  }
-  
-  .player h1 {
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
-  .player react-player {
-    border: 1px solid #ccc;
-    border-radius: 8px;
+  /* Style for the 'Connected' or 'No one in room' message */
+  h4 {
+    color: #660000; /* Dark red text color for status message */
   }
   

@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSocket } from "../context/SocketProvider";
+import "./LobbyScreen.css";
 
 const LobbyScreen = () => {
   const [email, setEmail] = useState("");
@@ -33,26 +34,34 @@ const LobbyScreen = () => {
   }, [socket, handleJoinRoom]);
 
   return (
-    <div>
-      <h1>Mediconnect</h1>
+    <div className="lobby-container">
+      <h1 className="mediconnect-title">Mediconnect</h1>
       <form onSubmit={handleSubmitForm}>
-        <label htmlFor="email">Email id</label>
+        <label className="label-text" htmlFor="email">
+          Email id
+        </label>
         <input
+          className="input-field"
           type="email"
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <br />
-        <label htmlFor="room">Authentication Number</label>
+        <label className="label-text" htmlFor="room">
+          Authentication Number
+        </label>
         <input
+          className="input-field"
           type="text"
           id="room"
           value={room}
           onChange={(e) => setRoom(e.target.value)}
         />
         <br />
-        <button>Join Now</button>
+        <button className="join-button" type="submit">
+          Join Now
+        </button>
       </form>
     </div>
   );
