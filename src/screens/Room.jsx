@@ -151,7 +151,7 @@ const RoomPage = () => {
             muted
             height="100px"
             width="200px"
-            url={myStream.toURL()}  {/* Updated to use toURL() */}
+            url={myStream.toURL()}  
           />
         </>
       )}
@@ -163,7 +163,7 @@ const RoomPage = () => {
             muted
             height="100px"
             width="200px"
-            url={remoteStream.toURL()}  {/* Updated to use toURL() */}
+            url={remoteStream.toURL()}  
           />
         </>
       )}
