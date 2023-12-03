@@ -7,9 +7,8 @@ import "./RoomScreen.css";
 const RoomPage = () => {
   const socket = useSocket();
   const [remoteSocketId, setRemoteSocketId] = useState(null);
-  const [myStream, setMyStream] = useState();
-  const [accepted, setAccepted] = useState(false);
-  const [remoteStream, setRemoteStream] = useState();
+  const [myStream, setMyStream] = useState(null);
+  const [remoteStream, setRemoteStream] = useState(null);
 
   const handleUserJoined = useCallback(({ email, id }) => {
     console.log(`Email ${email} joined room`);
@@ -17,71 +16,95 @@ const RoomPage = () => {
   }, []);
 
   const handleCallUser = useCallback(async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: true,
-      video: true,
-    });
-    const offer = await peer.getOffer();
-    socket.emit("user:call", { to: remoteSocketId, offer });
-    setMyStream(stream);
-  }, [remoteSocketId, socket]);
-
-  const handleIncommingCall = useCallback(
-    async ({ from, offer }) => {
-      setRemoteSocketId(from);
+    try {
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: true,
         video: true,
       });
+      const offer = await peer.getOffer();
+      socket.emit("user:call", { to: remoteSocketId, offer });
       setMyStream(stream);
-      setAccepted(true);
-      console.log(`Incoming Call`, from, offer);
-      const ans = await peer.getAnswer(offer);
-      socket.emit("call:accepted", { to: from, ans });
+    } catch (error) {
+      console.error("Error getting user media:", error);
+    }
+  }, [remoteSocketId, socket]);
+
+  const handleIncommingCall = useCallback(
+    async ({ from, offer }) => {
+      try {
+        setRemoteSocketId(from);
+        const stream = await navigator.mediaDevices.getUserMedia({
+          audio: true,
+          video: true,
+        });
+        setMyStream(stream);
+        console.log(`Incoming Call`, from, offer);
+        const ans = await peer.getAnswer(offer);
+        socket.emit("call:accepted", { to: from, ans });
+      } catch (error) {
+        console.error("Error handling incoming call:", error);
+      }
     },
     [socket]
   );
 
   const sendStreams = useCallback(() => {
-    setAccepted(true);
-    for (const track of myStream.getTracks()) {
-      peer.peer.addTrack(track, myStream);
+    if (myStream) {
+      for (const track of myStream.getTracks()) {
+        peer.peer.addTrack(track, myStream);
+      }
     }
-
   }, [myStream]);
 
   const handleCallAccepted = useCallback(
-    ({ from, ans }) => {
-      peer.setLocalDescription(ans);
-      console.log("Call Accepted!");
-      sendStreams();
+    ({ ans }) => {
+      try {
+        peer.setLocalDescription(ans);
+        console.log("Call Accepted!");
+        sendStreams();
+      } catch (error) {
+        console.error("Error handling call accepted:", error);
+      }
     },
     [sendStreams]
   );
 
-  const handleNegoNeeded = useCallback(async () => {
-    const offer = await peer.getOffer();
-    socket.emit("peer:nego:needed", { offer, to: remoteSocketId });
-  }, [remoteSocketId, socket]);
-
   useEffect(() => {
-    peer.peer.addEventListener("negotiationneeded", handleNegoNeeded);
+    peer.peer.addEventListener("negotiationneeded", async () => {
+      try {
+        const offer = await peer.getOffer();
+        socket.emit("peer:nego:needed", { offer, to: remoteSocketId });
+      } catch (error) {
+        console.error("Error handling negotiation needed:", error);
+      }
+    });
     return () => {
-      peer.peer.removeEventListener("negotiationneeded", handleNegoNeeded);
+      peer.peer.removeEventListener("negotiationneeded", () => {});
     };
-  }, [handleNegoNeeded]);
+  }, [remoteSocketId, socket]);
 
   const handleNegoNeedIncomming = useCallback(
     async ({ from, offer }) => {
-      const ans = await peer.getAnswer(offer);
-      socket.emit("peer:nego:done", { to: from, ans });
+      try {
+        const ans = await peer.getAnswer(offer);
+        socket.emit("peer:nego:done", { to: from, ans });
+      } catch (error) {
+        console.error("Error handling incoming negotiation:", error);
+      }
     },
     [socket]
   );
 
-  const handleNegoNeedFinal = useCallback(async ({ ans }) => {
-    await peer.setLocalDescription(ans);
-  }, []);
+  const handleNegoNeedFinal = useCallback(
+    async ({ ans }) => {
+      try {
+        await peer.setLocalDescription(ans);
+      } catch (error) {
+        console.error("Error handling final negotiation:", error);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     peer.peer.addEventListener("track", async (ev) => {
@@ -116,29 +139,31 @@ const RoomPage = () => {
 
   return (
     <div>
-      <h1>Video Call Room</h1>
-      <h4>{remoteSocketId ? "You're Connected with MediConnect" : "No user is live now"}</h4>
-      {myStream && <button onClick={sendStreams}>Send Video</button>}
+      <h1>Room Page</h1>
+      <h4>{remoteSocketId ? "Connected" : "No one in room"}</h4>
+      {myStream && <button onClick={sendStreams}>Send Stream</button>}
       {remoteSocketId && <button onClick={handleCallUser}>CALL</button>}
       {myStream && (
         <>
-          <h1>Me</h1>
+          <h1>My Stream</h1>
           <ReactPlayer
             playing
             muted
-            width="300px"
-            url={myStream}
+            height="100px"
+            width="200px"
+            url={myStream.toURL()}  {/* Updated to use toURL() */}
           />
         </>
       )}
-      {accepted && (
+      {remoteStream && (
         <>
-          <h1>Other User</h1>
+          <h1>Remote Stream</h1>
           <ReactPlayer
             playing
             muted
-            width="300px"
-            url={myStream}
+            height="100px"
+            width="200px"
+            url={remoteStream.toURL()}  {/* Updated to use toURL() */}
           />
         </>
       )}
