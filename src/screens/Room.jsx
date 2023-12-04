@@ -140,7 +140,7 @@ const RoomPage = () => {
             muted
             height="250px"
             width="250px"
-            url={myStream}
+            url={remoteStream}
           />
         </>
       )}
